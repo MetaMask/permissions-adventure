@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+    <title>Permissions Adventure</title>
+    <link rel="shortcut icon" href="./favicon.ico">
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="./css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="./css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  </head>
+
+  <body>
+    <nav class="purple" role="navigation">
+      <div class="nav-wrapper container">
+        <a id="logo-container" href="#" class="brand-logo">Permissions Adventure</a>
+        <p id="accountAddress" class="right flow-text" style="margin: 0">Unknown Account</p>
+      </div>
+    </nav>
+    <div class="container section no-pad-bot center">
+      <!-- <h3 class="header">Permissions Adventure</h1>
+
+      <hr> -->
+
+      <div class="section">
+        <div class="section left-align">
+          <div class="row">
+            <p id="message" class="flow-text">
+              You'll need to log in to get started.
+            </p>
+          </div>
+          <div class="row">
+            <p id="inputZone" style="display:none">
+              <div class="row">
+                <input id="nameInput" style="width:50%"></input>
+              </div>
+              <div class="row">
+                <button id="submitName" class="btn-large waves-effect waves-ligth purple">Write</button>
+              </div>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="section center">
+        <div class="row">
+          <h4>Permission Requests</h4>
+          <button id="allPerms" class="btn-large waves-effect waves-ligth purple">Request All</button>
+          <button id="readWrite" class="btn-large waves-effect waves-ligth purple">Read & Write</button>
+          <button id="enable" class="btn-large waves-effect waves-ligth teal">Enable</button>
+        </div>
+        <div class="row">
+          <h4>Method Calls</h4>
+          <button id="read" class="btn-large waves-effect waves-ligth purple">Read Profile</button>
+          <button id="eth_accounts" class="btn-large waves-effect waves-ligth purple">Get Accounts</button>
+        </div>
+      </div>
+
+    </div>
+  </body>
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="./js/materialize.js"></script>
+  <script src="./js/materialize-init.js"></script>
+  <script>
+    const ethereum = window.ethereum
+
+    /** LISTENERS **/
+
+    allPerms.addEventListener('click', function() {
+      requestPerms({
+          readYourProfile: {},
+          writeToYourProfile: {},
+          eth_accounts: {},
+        },
+        true,
+      )
+    })
+
+    readWrite.addEventListener('click', function() {
+      requestPerms({
+          readYourProfile: {},
+          writeToYourProfile: {},
+        },
+        true,
+      )
+    })
+
+    enable.addEventListener('click', function() {
+      if (!ethereum) throw new Error('no window.ethereum')
+      ethereum.send('eth_requestAccounts')
+      .then(result => {
+        console.log('ethereum.enable(): ', result)
+        accountAddress.innerText = getDisplayAddress(result[0])
+      })
+      .catch(error => showError(error))
+    })
+
+    read.addEventListener('click', readProfile)
+
+    eth_accounts.addEventListener('click', () => {
+      return ethereum.send('eth_accounts')
+      .then(result => {
+        console.dir({ message: 'eth_accounts result', result })
+        accountAddress.innerText = getDisplayAddress(result[0])
+      })
+      .catch(error => {
+        showError(error)
+        accountAddress.innerText = 'UNKNOWN'
+      })
+    })
+
+    submitName.addEventListener('click', changeName)
+
+    /** INIT **/
+
+    window.readProfile = readProfile
+    readProfile()
+
+    /** FUNCTIONS **/
+
+    async function requestPerms (perms, readWhenDone) {
+      ethereum.send('wallet_requestPermissions', [perms])
+      .then(result => {
+        console.dir({ message: 'wallet_requestPermissions result', result })
+        for (let perm of result.result) {
+          if (perm.parentCapability === 'writeToYourProfile') {
+            inputZone.style.display = 'block'
+          }
+          if (perm.parentCapability === 'eth_accounts') {
+            accountAddress.innerText = getDisplayAddress(perm.caveats[0].value[0])
+          }
+        }
+        if (readWhenDone) readProfile()
+        if (hasWrite) inputZone.style.display = 'block'
+      })
+      .catch(error => showError(error))
+    }
+
+    function changeName () {
+      const name = nameInput.value
+      ethereum.send('writeToYourProfile', ['name', name])
+      .then(result => {
+        console.dir({ message: 'writeToYourProfile result', result })
+        readProfile()
+      })
+      .catch(error => {
+        inputZone.style.display = 'none'
+        showError(error)
+      })
+    }
+
+    function readProfile () {
+      ethereum.send('readYourProfile', [])
+      .then(result => {
+        console.dir({ message: 'readYourProfile result', result })
+        inputZone.style.display = 'block'
+        message.innerText = `Welcome, ${result.result.name}`
+      })
+      .catch(error => showError(error))
+    }
+
+    function showError (error) {
+      message.innerText = `Had a problem: ${error.message}`
+    }
+
+    /**
+     * Truncates an Ethereum address for display purposes.
+     * @param {string} address the address to truncate
+     */
+    function getDisplayAddress (address) {
+      return address.slice(0, 6) + '...' + address.slice(address.length - 4)
+    }
+  </script>
+
+</html>

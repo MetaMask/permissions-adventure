@@ -1,0 +1,22 @@
+{
+  "name": "permissions-adventure",
+  "version": "0.0.0",
+  "description": "MetaMask permissions test site.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "http-server www"
+  },
+  "devDependencies": {
+    "http-server": "^0.11.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MetaMask/permissions-adventure.git"
+  },
+  "author": "Erik Marks <rekmarks@protonmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MetaMask/permissions-adventure/issues"
+  },
+  "homepage": "https://github.com/MetaMask/permissions-adventure#readme"
+}
