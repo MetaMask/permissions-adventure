@@ -4,7 +4,8 @@
   "description": "MetaMask permissions test site.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "http-server www"
+    "serve": "http-server www",
+    "publish": "git subtree push --prefix www origin gh-pages"
   },
   "devDependencies": {
     "http-server": "^0.11.1"
@@ -18,5 +19,5 @@
   "bugs": {
     "url": "https://github.com/MetaMask/permissions-adventure/issues"
   },
-  "homepage": "https://github.com/MetaMask/permissions-adventure#readme"
+  "homepage": "https://metamask.github.io/permissions-adventure/"
 }
