@@ -12,54 +12,113 @@
     <link href="./css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   </head>
 
-  <body>
+  <body class="grey lighten-5">
     <nav class="purple" role="navigation">
       <div class="nav-wrapper container">
-        <a id="logo-container" href="#" class="brand-logo">Permissions Adventure</a>
-        <p id="accountAddress" class="right flow-text" style="margin: 0">Unknown Account</p>
+        <a class="row" style="display: flex; align-items: center" href="/">
+          <img
+            src="./nav-icon.png"
+            class="left"
+            style="max-height:50px; margin: 0; margin: 7px 10px 0px 0px"
+          />
+          <h4 class="left" style="vertical-align: center; margin: 5px 0px 0px 10px">Permissions Adventure</h4>
+        </a>
       </div>
     </nav>
     <div class="container section no-pad-bot center">
-      <!-- <h3 class="header">Permissions Adventure</h1>
-
-      <hr> -->
 
       <div class="section">
-        <div class="section left-align">
-          <div class="row">
-            <p id="message" class="flow-text">
-              You'll need to log in to get started.
-            </p>
-          </div>
-          <div class="row">
-            <p id="inputZone" style="display:none">
-              <div class="row">
-                <input id="nameInput" style="width:50%"></input>
+        <div class="row">
+          <div class="col l10 card grey lighten-5 left-align">
+
+            <div class="row">
+              <h4 style="margin:20px 20px 0px 20px;">
+                Status
+              </h4>
+            </div>
+
+            <div class="row">
+              <div class="col l10" style="padding-left:0">
+                <h5 id="statusMessage" class="teal-text" style="margin:0px 0px 0px 20px;">
+                  Please log in to continue.
+                </h5>
               </div>
-              <div class="row">
-                <button id="submitName" class="btn-large waves-effect waves-ligth purple">Write</button>
+            </div>
+
+            <div class="row">
+              <div class="col l5" style="padding-left:0">
+                <h5 class="left" style="margin:20px 20px 0px 20px;">
+                  User
+                </h5>
               </div>
-            </p>
+              <div class="col l6">
+                <h5 id="userStatus" class="right-align teal-text" style="margin:20px 0px 0px 20px;">
+                  Unknown
+                </h5>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col l5" style="padding-left:0">
+                <h5 class="left" style="margin:20px 20px 0px 20px;">
+                  Account
+                </h5>
+              </div>
+              <div class="col l6">
+                <h5 id="accountAddress" class="right-align teal-text" style="margin:20px 0px 0px 20px;">
+                  Unknown
+                </h5>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <hr>
+      <div class="section">
+        <div class="row">
+          <div class="col l10 card grey lighten-5 left-align">
 
-      <div class="section center">
-        <div class="row">
-          <h4>Permission Requests</h4>
-          <button id="allPerms" class="btn-large waves-effect waves-ligth purple">Request All</button>
-          <button id="readWrite" class="btn-large waves-effect waves-ligth purple">Read & Write</button>
-          <button id="enable" class="btn-large waves-effect waves-ligth teal">Enable</button>
-        </div>
-        <div class="row">
-          <h4>Method Calls</h4>
-          <button id="read" class="btn-large waves-effect waves-ligth purple">Read Profile</button>
-          <button id="eth_accounts" class="btn-large waves-effect waves-ligth purple">Get Accounts</button>
+            <div class="row">
+              <h4 style="margin:20px 20px 0px 20px;">
+                Actions
+              </h4>
+            </div>
+
+            <div class="row">
+              <h5 style="margin:20px 20px 0px 20px;">Permission Requests</h5>
+            </div>
+
+            <div class="row">
+              <button id="enable" class="btn-large waves-effect waves-ligth teal" style="margin:20px 20px 10px 20px;">
+                Enable
+              </button>
+              <button id="allPerms" class="btn-large waves-effect waves-ligth purple" style="margin:20px 20px 10px 20px;">
+                Request All
+              </button>
+              <button id="readWrite" class="btn-large waves-effect waves-ligth purple" style="margin:20px 20px 10px 20px;">
+                Read & Write
+              </button>
+            </div>
+
+            <div class="row">
+              <h5 style="margin:20px 20px 0px 20px;">Method Calls</h5>
+            </div>
+
+            <div class="row">
+              <button id="eth_accounts" class="btn-large waves-effect waves-ligth purple" style="margin:20px 20px 10px 20px;">
+                Get Accounts
+              </button>
+              <button id="read" class="btn-large waves-effect waves-ligth purple" style="margin:20px 20px 10px 20px;">
+                Read Profile
+              </button>
+              <input id="nameInput" style="margin:0px 20px; width: 94%"></input>
+              <button id="submitName" class="btn-large waves-effect waves-ligth purple" style="margin:20px 20px 10px 20px;">
+                Write to Profile
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-
     </div>
   </body>
 
@@ -68,7 +127,14 @@
   <script src="./js/materialize.js"></script>
   <script src="./js/materialize-init.js"></script>
   <script>
+
     const ethereum = window.ethereum
+
+    /** INIT **/
+
+    window.readProfile = readProfile
+    readProfile()
+    getAccounts()
 
     /** LISTENERS **/
 
@@ -93,51 +159,57 @@
 
     enable.addEventListener('click', function() {
       if (!ethereum) throw new Error('no window.ethereum')
-      ethereum.send('eth_requestAccounts')
+      ethereum.send('eth_accounts')
       .then(result => {
-        console.log('ethereum.enable(): ', result)
-        accountAddress.innerText = getDisplayAddress(result[0])
+        console.dir({ message: 'eth_accounts result', result })
+        accountAddress.innerText = getDisplayAddress(result.result[0])
       })
-      .catch(error => showError(error))
+      .catch(error => {
+        if (error.code === 1) {
+          ethereum.send('eth_requestAccounts')
+          .then(result => {
+            console.log('ethereum.enable(): ', result)
+            accountAddress.innerText = getDisplayAddress(result[0])
+          })
+          .catch(_error => showError(_error))
+        } else {
+          showError(error)
+        }
+      })
     })
 
     read.addEventListener('click', readProfile)
 
     eth_accounts.addEventListener('click', () => {
-      return ethereum.send('eth_accounts')
-      .then(result => {
-        console.dir({ message: 'eth_accounts result', result })
-        accountAddress.innerText = getDisplayAddress(result[0])
-      })
-      .catch(error => {
-        showError(error)
-        accountAddress.innerText = 'UNKNOWN'
-      })
+      return getAccounts()
     })
 
     submitName.addEventListener('click', changeName)
 
-    /** INIT **/
-
-    window.readProfile = readProfile
-    readProfile()
-
     /** FUNCTIONS **/
+
+    function getAccounts() {
+      return ethereum.send('eth_accounts')
+      .then(result => {
+        console.dir({ message: 'eth_accounts result', result })
+        accountAddress.innerText = getDisplayAddress(result[0] || result.result[0])
+      })
+      .catch(error => {
+        showError(error)
+        accountAddress.innerText = 'Unknown'
+      })
+    }
 
     async function requestPerms (perms, readWhenDone) {
       ethereum.send('wallet_requestPermissions', [perms])
       .then(result => {
         console.dir({ message: 'wallet_requestPermissions result', result })
         for (let perm of result.result) {
-          if (perm.parentCapability === 'writeToYourProfile') {
-            inputZone.style.display = 'block'
-          }
           if (perm.parentCapability === 'eth_accounts') {
             accountAddress.innerText = getDisplayAddress(perm.caveats[0].value[0])
           }
         }
         if (readWhenDone) readProfile()
-        if (hasWrite) inputZone.style.display = 'block'
       })
       .catch(error => showError(error))
     }
@@ -150,7 +222,6 @@
         readProfile()
       })
       .catch(error => {
-        inputZone.style.display = 'none'
         showError(error)
       })
     }
@@ -159,14 +230,17 @@
       ethereum.send('readYourProfile', [])
       .then(result => {
         console.dir({ message: 'readYourProfile result', result })
-        inputZone.style.display = 'block'
-        message.innerText = `Welcome, ${result.result.name}`
+        userStatus.innerText = result.result.name
+        statusMessage.innerText = 'Welcome!'
       })
-      .catch(error => showError(error))
+      .catch(error => {
+        userStatus.innerText = 'Unknown'
+        showError(error)
+      })
     }
 
     function showError (error) {
-      message.innerText = `Had a problem: ${error.message}`
+      statusMessage.innerText = `Had a problem: ${error.message}`
     }
 
     /**
