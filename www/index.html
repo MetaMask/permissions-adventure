@@ -29,7 +29,7 @@
 
       <div class="section">
         <div class="row">
-          <div class="col l10 card grey lighten-5 left-align">
+          <div class="col l12 card grey lighten-5 left-align">
 
             <div class="row">
               <h4 style="margin:20px 20px 0px 20px;">
@@ -38,7 +38,7 @@
             </div>
 
             <div class="row">
-              <div class="col l10" style="padding-left:0">
+              <div class="col l12" style="padding-left:0">
                 <h5 id="statusMessage" class="teal-text" style="margin:0px 0px 0px 20px;">
                   Please log in to continue.
                 </h5>
@@ -76,7 +76,7 @@
 
       <div class="section">
         <div class="row">
-          <div class="col l10 card grey lighten-5 left-align">
+          <div class="col l12 card grey lighten-5 left-align">
 
             <div class="row">
               <h4 style="margin:20px 20px 0px 20px;">
@@ -105,15 +105,27 @@
             </div>
 
             <div class="row">
-              <button id="eth_accounts" class="btn-large waves-effect waves-ligth purple" style="margin:20px 20px 10px 20px;">
-                Get Accounts
-              </button>
-              <button id="read" class="btn-large waves-effect waves-ligth purple" style="margin:20px 20px 10px 20px;">
+              <button id="read" class="btn-large waves-effect waves-ligth purple" style="margin:20px 20px 0px 20px;">
                 Read Profile
               </button>
-              <input id="nameInput" style="margin:0px 20px; width: 94%"></input>
-              <button id="submitName" class="btn-large waves-effect waves-ligth purple" style="margin:20px 20px 10px 20px;">
+            </div>
+            <div class="row">
+              <form id="writeToProfileForm">
+                <input id="writeToProfileInput" style="margin:0px 20px; width: 94%" placeholder="Your Name Here"></input>
+                <input type="submit" style="visibility: hidden; position: absolute" />
+              </form>
+              <button id="writeToProfileButton" class="btn-large waves-effect waves-ligth purple" style="margin:20px 20px 0px 20px;">
                 Write to Profile
+              </button>
+            </div>
+            <div class="row">
+              <form id="customCallForm">
+                <input id="customCallMethod" style="margin:0px 20px; width: 94%" placeholder="Method"></input>
+                <input id="customCallParams" style="margin:0px 20px; width: 94%" placeholder="Params"></input>
+                <input type="submit" style="visibility: hidden; position: absolute" />
+              </form>
+              <button id="customCallButton" class="btn-large waves-effect waves-ligth purple" style="margin:20px 20px 10px 20px;">
+                Make Call
               </button>
             </div>
           </div>
@@ -136,7 +148,7 @@
     readProfile()
     getAccounts()
 
-    /** LISTENERS **/
+    /** ADD LISTENERS **/
 
     allPerms.addEventListener('click', function() {
       requestPerms({
@@ -159,39 +171,31 @@
 
     enable.addEventListener('click', function() {
       if (!ethereum) throw new Error('no window.ethereum')
-      ethereum.send('eth_accounts')
+      ethereum.send('eth_requestAccounts')
       .then(result => {
-        console.dir({ message: 'eth_accounts result', result })
-        accountAddress.innerText = getDisplayAddress(result.result[0])
+        console.log('eth_requestAccounts:', result)
+        accountAddress.innerText = getDisplayAddress(result[0])
+        statusMessage.innerText = 'Successfully retrieved account.'
       })
       .catch(error => {
-        if (error.code === 1) {
-          ethereum.send('eth_requestAccounts')
-          .then(result => {
-            console.log('ethereum.enable(): ', result)
-            accountAddress.innerText = getDisplayAddress(result[0])
-          })
-          .catch(_error => showError(_error))
-        } else {
-          showError(error)
-        }
+        showError(error)
       })
     })
 
     read.addEventListener('click', readProfile)
 
-    eth_accounts.addEventListener('click', () => {
-      return getAccounts()
-    })
+    writeToProfileButton.addEventListener('click', writeProfile)
+    writeToProfileForm.addEventListener('submit', writeProfile)
 
-    submitName.addEventListener('click', changeName)
+    customCallButton.addEventListener('click', customCall)
+    customCallForm.addEventListener('submit', customCall)
 
     /** FUNCTIONS **/
 
     function getAccounts() {
       return ethereum.send('eth_accounts')
       .then(result => {
-        console.dir({ message: 'eth_accounts result', result })
+        console.log('eth_accounts:', result)
         accountAddress.innerText = getDisplayAddress(result[0] || result.result[0])
       })
       .catch(error => {
@@ -203,7 +207,7 @@
     async function requestPerms (perms, readWhenDone) {
       ethereum.send('wallet_requestPermissions', [perms])
       .then(result => {
-        console.dir({ message: 'wallet_requestPermissions result', result })
+        console.log('wallet_requestPermissions:', result)
         for (let perm of result.result) {
           if (perm.parentCapability === 'eth_accounts') {
             accountAddress.innerText = getDisplayAddress(perm.caveats[0].value[0])
@@ -214,22 +218,10 @@
       .catch(error => showError(error))
     }
 
-    function changeName () {
-      const name = nameInput.value
-      ethereum.send('writeToYourProfile', ['name', name])
-      .then(result => {
-        console.dir({ message: 'writeToYourProfile result', result })
-        readProfile()
-      })
-      .catch(error => {
-        showError(error)
-      })
-    }
-
     function readProfile () {
       ethereum.send('readYourProfile', [])
       .then(result => {
-        console.dir({ message: 'readYourProfile result', result })
+        console.log('readYourProfile:', result)
         userStatus.innerText = result.result.name
         statusMessage.innerText = 'Welcome!'
       })
@@ -237,6 +229,40 @@
         userStatus.innerText = 'Unknown'
         showError(error)
       })
+    }
+
+    function writeProfile (event) {
+      event.preventDefault()
+      const name = writeToProfileInput.value
+      ethereum.send('writeToYourProfile', ['name', name])
+      .then(result => {
+        console.log('writeToYourProfile:', result)
+        readProfile()
+      })
+      .catch(error => {
+        showError(error)
+      })
+      writeToProfileInput.value = ''
+    }
+
+    function customCall (event) {
+      event.preventDefault()
+      const method = customCallMethod.value
+      const firstParamChar = customCallParams.value.charAt(0)
+      const params = (
+        firstParamChar === '{' || firstParamChar === '['
+        ? JSON.parse(customCallParams.value)
+        : customCallParams.value
+      )
+      ethereum.send(method, params)
+      .then(result => {
+        console.log(method + ':', result)
+      })
+      .catch(error => {
+        showError(error)
+      })
+      customCallMethod.value = ''
+      customCallParams.value = ''
     }
 
     function showError (error) {
