@@ -25,112 +25,110 @@
         </a>
       </div>
     </nav>
-    <div class="container section no-pad-bot center">
+    <div class="container section no-pad-bot center" style="width:80%">
 
       <div class="section">
         <div class="row">
           <div class="col l12 card grey lighten-5 left-align">
 
             <div class="row">
-              <h4 style="margin:20px 20px 0px 20px;">
-                Status
-              </h4>
-            </div>
-
-            <div class="row">
-              <div class="col l12" style="padding-left:0">
-                <h5 id="statusMessage" class="teal-text" style="margin:0px 0px 0px 20px;">
+              <div class="col l4" style="padding-left:0">
+                <h5 class="left" style="margin:20px 20px 0px 20px;">
+                  Message
+                </h5>
+              </div>
+              <div class="col l7" style="padding-left:0">
+                <h5 id="statusMessage" class="teal-text" style="margin:20px 0px 0px 20px;">
                   Please log in to continue.
                 </h5>
               </div>
             </div>
 
             <div class="row">
-              <div class="col l5" style="padding-left:0">
+              <div class="col l4" style="padding-left:0">
                 <h5 class="left" style="margin:20px 20px 0px 20px;">
                   User
                 </h5>
               </div>
-              <div class="col l6">
-                <h5 id="userStatus" class="right-align teal-text" style="margin:20px 0px 0px 20px;">
+              <div class="col l7" style="padding-left:0">
+                <h5 id="userStatus" class="teal-text" style="margin:20px 0px 0px 20px;">
                   Unknown
                 </h5>
               </div>
             </div>
 
             <div class="row">
-              <div class="col l5" style="padding-left:0">
+              <div class="col l4" style="padding-left:0">
                 <h5 class="left" style="margin:20px 20px 0px 20px;">
                   Account
                 </h5>
               </div>
-              <div class="col l6">
-                <h5 id="accountAddress" class="right-align teal-text" style="margin:20px 0px 0px 20px;">
+              <div class="col l7" style="padding-left:0">
+                <h5 id="accountAddress" class="teal-text" style="margin:20px 0px 0px 20px;">
                   Unknown
                 </h5>
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div class="section">
-        <div class="row">
           <div class="col l12 card grey lighten-5 left-align">
 
             <div class="row">
-              <h4 style="margin:20px 20px 0px 20px;">
+              <h5 style="margin:20px 20px 0px 20px;">
                 Actions
-              </h4>
+              </h5>
             </div>
 
             <div class="row">
-              <h5 style="margin:20px 20px 0px 20px;">Permission Requests</h5>
+              <h6 style="margin:20px 20px 0px 20px;">Permission Requests</h6>
             </div>
 
             <div class="row">
-              <button id="enable" class="btn-large waves-effect waves-ligth teal" style="margin:20px 20px 10px 20px;">
-                Enable
-              </button>
-              <button id="allPerms" class="btn-large waves-effect waves-ligth purple" style="margin:20px 20px 10px 20px;">
+              <button id="allPerms" class="btn-small waves-effect waves-ligth purple" style="margin:0px 20px 10px 20px;">
                 Request All
               </button>
-              <button id="readWrite" class="btn-large waves-effect waves-ligth purple" style="margin:20px 20px 10px 20px;">
+              <button id="readWrite" class="btn-small waves-effect waves-ligth purple" style="margin:0px 20px 10px 20px;">
                 Read & Write
+              </button>
+              <button id="enable" class="btn-small waves-effect waves-ligth teal" style="margin:0px 20px 10px 20px;">
+                Enable
               </button>
             </div>
 
             <div class="row">
-              <h5 style="margin:20px 20px 0px 20px;">Method Calls</h5>
+              <h6 style="margin:20px 20px 0px 20px;">Method Calls</h6>
             </div>
 
             <div class="row">
-              <button id="read" class="btn-large waves-effect waves-ligth purple" style="margin:20px 20px 0px 20px;">
+              <button id="read" class="btn-small waves-effect waves-ligth purple" style="margin:0px 20px 0px 20px;">
                 Read Profile
               </button>
             </div>
+
             <div class="row">
               <form id="writeToProfileForm">
                 <input id="writeToProfileInput" style="margin:0px 20px; width: 94%" placeholder="Your Name Here"></input>
                 <input type="submit" style="visibility: hidden; position: absolute" />
               </form>
-              <button id="writeToProfileButton" class="btn-large waves-effect waves-ligth purple" style="margin:20px 20px 0px 20px;">
+              <button id="writeToProfileButton" class="btn-small waves-effect waves-ligth purple" style="margin:20px 20px 0px 20px;">
                 Write to Profile
               </button>
             </div>
             <div class="row">
-              <form id="customCallForm">
-                <input id="customCallMethod" style="margin:0px 20px; width: 94%" placeholder="Method"></input>
-                <input id="customCallParams" style="margin:0px 20px; width: 94%" placeholder="Params"></input>
-                <input type="submit" style="visibility: hidden; position: absolute" />
-              </form>
-              <button id="customCallButton" class="btn-large waves-effect waves-ligth purple" style="margin:20px 20px 10px 20px;">
-                Make Call
-              </button>
+                <form id="customCallForm">
+                  <input id="customCallMethod" style="margin:0px 20px; width: 46%" placeholder="Method"></input>
+                  <input id="customCallParams" style="margin:0px 0 0 0px; width: 46%" placeholder="Params"></input>
+                  <input type="submit" style="visibility: hidden; position: absolute" />
+                </form>
+                <button id="customCallButton" class="btn-small waves-effect waves-ligth purple" style="margin:20px 20px 10px 20px;">
+                  Make Call
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
     </div>
   </body>
 
@@ -145,8 +143,11 @@
     /** INIT **/
 
     window.readProfile = readProfile
-    readProfile()
-    getAccounts()
+    if (!ethereum) throw new Error('no window.ethereum')
+    else {
+      readProfile(false)
+      getAccounts(false)
+    }
 
     /** ADD LISTENERS **/
 
@@ -169,18 +170,7 @@
       )
     })
 
-    enable.addEventListener('click', function() {
-      if (!ethereum) throw new Error('no window.ethereum')
-      ethereum.send('eth_requestAccounts')
-      .then(result => {
-        console.log('eth_requestAccounts:', result)
-        accountAddress.innerText = getDisplayAddress(result[0])
-        statusMessage.innerText = 'Successfully retrieved account.'
-      })
-      .catch(error => {
-        showError(error)
-      })
-    })
+    enable.addEventListener('click', requestAccounts)
 
     read.addEventListener('click', readProfile)
 
@@ -192,15 +182,27 @@
 
     /** FUNCTIONS **/
 
-    function getAccounts() {
+    function requestAccounts() {
+      ethereum.send('eth_requestAccounts')
+      .then(result => {
+        console.log('eth_requestAccounts:', result)
+        accountAddress.innerText = getDisplayAddress(result[0])
+        statusMessage.innerText = 'Successfully retrieved account.'
+      })
+      .catch(error => {
+        showError(error)
+      })
+    }
+
+    function getAccounts(displayError = true) {
       return ethereum.send('eth_accounts')
       .then(result => {
         console.log('eth_accounts:', result)
         accountAddress.innerText = getDisplayAddress(result[0] || result.result[0])
       })
       .catch(error => {
-        showError(error)
         accountAddress.innerText = 'Unknown'
+        if (displayError) showError(error)
       })
     }
 
@@ -218,7 +220,7 @@
       .catch(error => showError(error))
     }
 
-    function readProfile () {
+    function readProfile (displayError = true) {
       ethereum.send('readYourProfile', [])
       .then(result => {
         console.log('readYourProfile:', result)
@@ -227,7 +229,7 @@
       })
       .catch(error => {
         userStatus.innerText = 'Unknown'
-        showError(error)
+        if (displayError) showError(error)
       })
     }
 
