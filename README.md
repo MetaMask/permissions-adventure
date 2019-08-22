@@ -7,6 +7,6 @@ Ensure you are using [the LoginPerSite branch](
   https://github.com/MetaMask/metamask-extension/tree/LoginPerSite
 ) of the extension.
 
-To serve locally, use `npm install && npm run serve`.
+To serve locally, use `yarn install && yarn serve`.
 
-To publish to GitHub Pages, use `npm run publish`.
+To publish to GitHub Pages, use `yarn publish`.
