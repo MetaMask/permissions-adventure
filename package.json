@@ -4,11 +4,11 @@
   "description": "MetaMask permissions test site.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "http-server www",
+    "serve": "static-server www",
     "publish": "git subtree push --prefix www origin gh-pages"
   },
   "devDependencies": {
-    "http-server": "^0.11.1"
+    "static-server": "^2.2.1"
   },
   "repository": {
     "type": "git",
